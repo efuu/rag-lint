@@ -87,7 +87,8 @@ def _finding_context(f: Finding, doc_by_path: dict[str, Document]) -> dict:
                     "cosine": sim,
                 }
             )
-        ctx["pairs"] = pairs
+        ctx["primary_pair"] = pairs[0] if pairs else None
+        ctx["extra_pairs"] = pairs[1:]
         ctx["pair_count"] = len(f.evidence["matched_pairs"])
         ctx["primary_classification"] = f.evidence["primary_classification"]
         ctx["other_classification"] = f.evidence["other_classification"]
@@ -129,7 +130,8 @@ def _finding_context(f: Finding, doc_by_path: dict[str, Document]) -> dict:
                     "cosine": sim,
                 }
             )
-        ctx["pairs"] = pairs
+        ctx["primary_pair"] = pairs[0] if pairs else None
+        ctx["extra_pairs"] = pairs[1:]
         ctx["higher_classification"] = f.evidence["higher_classification"]
         ctx["lower_classification"] = f.evidence["lower_classification"]
         ctx["higher_path"] = f.evidence["higher_path"]

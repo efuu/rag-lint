@@ -6,15 +6,15 @@
 <style>
   :root {
     --fg: #1a1a1a;
-    --muted: #555;
-    --border: #d9d9d9;
+    --muted: #6a6a6a;
+    --faint: #8a8a8a;
+    --border: #e2e2e2;
     --bg: #fafafa;
     --card: #ffffff;
     --high: #b3261e;
     --medium: #b68400;
     --low: #3a6d3a;
     --mark-bg: #fff3a3;
-    --mark-fg: #1a1a1a;
     --higher-bg: #fef6ee;
     --lower-bg: #eef3fb;
   }
@@ -26,54 +26,56 @@
     color: var(--fg);
     font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 80px; }
-  header.page { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
-  header.page h1 { margin: 0 0 6px 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
-  header.page .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 18px; }
-  header.page .meta span.sep { color: var(--border); }
-  .class-counts { margin-top: 10px; color: var(--muted); font-size: 13px; }
-  .class-counts .pill {
-    display: inline-block;
-    padding: 2px 8px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-right: 6px;
-    font-size: 12px;
-    background: var(--card);
+  .wrap { max-width: 980px; margin: 0 auto; padding: 28px 24px 64px; }
+
+  header.page { margin-bottom: 20px; }
+  header.page h1 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
-  .summary-line { margin-top: 12px; font-size: 14px; }
-  .summary-line strong { font-weight: 600; }
-  .sev-high   .badge { background: var(--high); color: white; }
-  .sev-medium .badge { background: var(--medium); color: white; }
-  .sev-low    .badge { background: var(--low); color: white; }
+  header.page .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .headline {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 13px;
+  }
+  .headline .count { font-weight: 600; font-size: 15px; }
+  .headline .count.clean { color: var(--low); }
+  .headline .count.dirty { color: var(--high); }
+  .headline .sep { color: var(--faint); }
+  .headline .tiny { color: var(--muted); font-size: 12px; }
+
+  .findings { margin-top: 18px; }
   .finding {
     background: var(--card);
     border: 1px solid var(--border);
     border-left: 4px solid var(--border);
     border-radius: 6px;
-    padding: 16px 18px;
-    margin: 14px 0;
+    padding: 14px 16px;
+    margin-bottom: 12px;
   }
   .finding.sev-high   { border-left-color: var(--high); }
   .finding.sev-medium { border-left-color: var(--medium); }
   .finding.sev-low    { border-left-color: var(--low); }
-  .finding header {
+
+  .finding .top {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 10px;
-    margin-bottom: 6px;
-  }
-  .rule-id {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 12px;
-    letter-spacing: 0.03em;
-    color: var(--muted);
-  }
-  .rule-name {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 13px;
-    color: var(--fg);
+    margin-bottom: 4px;
   }
   .badge {
     font-size: 10px;
@@ -82,37 +84,47 @@
     letter-spacing: 0.06em;
     padding: 2px 7px;
     border-radius: 3px;
+    color: white;
+  }
+  .sev-high   .badge { background: var(--high); }
+  .sev-medium .badge { background: var(--medium); }
+  .sev-low    .badge { background: var(--low); }
+  .rule-id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.02em;
+  }
+  .rule-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--muted);
   }
   .primary-file {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--fg);
     margin-left: auto;
   }
-  .detail { margin: 4px 0 8px; }
+  .detail {
+    margin: 4px 0 10px;
+    font-size: 13.5px;
+  }
   .fix {
-    margin: 8px 0 0;
-    padding: 8px 10px;
-    background: #f4f6f4;
-    border: 1px solid #e4e8e4;
+    margin: 10px 0 0;
+    padding: 7px 10px;
+    background: #f5f5f0;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 12.5px;
+    color: var(--fg);
   }
   .fix::before { content: "Fix — "; font-weight: 600; color: var(--muted); }
-  details { margin-top: 10px; }
-  details > summary {
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  details > summary:hover { color: var(--fg); }
 
   .sidebyside {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 8px;
   }
   .pane {
     border: 1px solid var(--border);
@@ -140,23 +152,41 @@
   }
   mark.shingle {
     background: var(--mark-bg);
-    color: var(--mark-fg);
     padding: 0 1px;
     border-radius: 2px;
   }
+
+  details.more-pairs { margin-top: 10px; }
+  details.more-pairs > summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 4px 0;
+  }
+  details.more-pairs > summary:hover { color: var(--fg); }
+  details.r002-pairs { margin-top: 6px; }
+  details.r002-pairs > summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 4px 0;
+  }
+  details.r002-pairs > summary:hover { color: var(--fg); }
+
   .pair-cos {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 11px;
-    color: var(--muted);
-    margin: 16px 0 4px;
+    color: var(--faint);
+    margin: 12px 0 4px;
   }
-  .pair-cos:first-child { margin-top: 0; }
+
   footer.page {
-    margin-top: 48px;
-    color: var(--muted);
-    font-size: 12px;
+    margin-top: 40px;
+    color: var(--faint);
+    font-size: 11.5px;
     border-top: 1px solid var(--border);
-    padding-top: 12px;
+    padding-top: 10px;
+    line-height: 1.5;
   }
   .empty-state {
     background: var(--card);
@@ -170,218 +200,199 @@
 </head>
 <body>
 <div class="wrap">
+
 <header class="page">
   <h1>rag-lint report</h1>
-  <div class="meta">
-    <div><strong>Corpus</strong>: data/corpus/acme_financial</div>
-    <div><strong>Run</strong>: 2026-04-17 11:57 UTC</div>
-    <div><strong>Documents</strong>: 14</div>
-    <div><strong>Paragraphs</strong>: 127</div>
-  </div>
-  <div class="class-counts">
-      <span class="pill">internal: 4</span>
-      <span class="pill">public: 3</span>
-      <span class="pill">confidential: 3</span>
-      <span class="pill">restricted: 3</span>
-      <span class="pill">(missing): 1</span>
-  </div>
-  <div class="summary-line">
-      <strong>3 findings</strong>
-      &nbsp;·&nbsp; 2 high, 1 medium, 0 low
+  <div class="subtitle">data/corpus/acme_financial · 14 documents, 127 paragraphs · 2026-04-17 12:23 UTC</div>
+  <div class="headline">
+      <span class="count dirty">3 findings</span>
+      <span class="sep">·</span>
+      <span class="tiny">2 high, 1 medium, 0 low</span>
   </div>
 </header>
 
-<main>
+<section class="findings">
   <article class="finding sev-high">
-    <header>
+    <div class="top">
       <span class="badge">high</span>
       <span class="rule-id">R003</span>
       <span class="rule-name">cross-classification-semantic-overlap</span>
       <span class="primary-file">ma_memo_project_falcon_rationale.md</span>
-    </header>
-    <p class="detail">Paragraph in `ma_memo_project_falcon_rationale.md` (restricted) has cosine 0.95 to a paragraph in `annual_report_2024_strategy.md` (public); overlap creates the precondition for a paraphrase leak across classifications.</p>
+    </div>
+    <div class="detail">Paragraph in `ma_memo_project_falcon_rationale.md` (restricted) has cosine 0.95 to a paragraph in `annual_report_2024_strategy.md` (public); overlap creates the precondition for a paraphrase leak across classifications.</div>
 
-      <details open>
-        <summary>
-          Cross-class overlap: <code>ma_memo_project_falcon_rationale.md</code> (restricted)
-          vs <code>annual_report_2024_strategy.md</code> (public)
-          · max cosine 0.95
-        </summary>
-          <div class="pair-cos">
-            pair #1 · cosine 0.95
-            · ma_memo_project_falcon_rationale.md:19
-            ↔ annual_report_2024_strategy.md:17
+      <div class="pair-cos">
+        ma_memo_project_falcon_rationale.md:19
+        ↔ annual_report_2024_strategy.md:17
+        · cosine 0.95
+      </div>
+      <div class="sidebyside">
+        <div class="pane higher">
+          <div class="pane-header">
+            <span>ma_memo_project_falcon_rationale.md:19</span>
+            <span class="cls">restricted</span>
           </div>
-          <div class="sidebyside">
-            <div class="pane higher">
-              <div class="pane-header">
-                <span class="path">ma_memo_project_falcon_rationale.md:19</span>
-                <span class="cls">restricted</span>
-              </div>
-              The transaction is framed as an acceleration of the <mark class="shingle">disciplined expansion into private credit</mark> that we <mark class="shingle">first announced at the 2023 investor day</mark> and that remains <mark class="shingle">the central multi-year thesis guiding our capital allocation</mark>. We continue to <mark class="shingle">see the opportunity as structural rather than cyclical, driven by the</mark> <mark class="shingle">retreat of regulated bank lenders from the middle market and by durable demand from sponsors for flexible, relationship-driven financing</mark>.
-            </div>
-            <div class="pane lower">
-              <div class="pane-header">
-                <span class="path">annual_report_2024_strategy.md:17</span>
-                <span class="cls">public</span>
-              </div>
-              Our <mark class="shingle">disciplined expansion into private credit</mark>, <mark class="shingle">first announced at the 2023 investor day</mark>, has continued to be <mark class="shingle">the central multi-year thesis guiding our capital allocation</mark> through 2024. We <mark class="shingle">see the opportunity as structural rather than cyclical, driven by the</mark> continued <mark class="shingle">retreat of regulated bank lenders from the middle market and by durable demand from sponsors for flexible, relationship-driven financing</mark>.
-            </div>
+          The transaction is framed as an acceleration of the <mark class="shingle">disciplined expansion into private credit</mark> that we <mark class="shingle">first announced at the 2023 investor day</mark> and that remains <mark class="shingle">the central multi-year thesis guiding our capital allocation</mark>. We continue to <mark class="shingle">see the opportunity as structural rather than cyclical, driven by the</mark> <mark class="shingle">retreat of regulated bank lenders from the middle market and by durable demand from sponsors for flexible, relationship-driven financing</mark>.
+        </div>
+        <div class="pane lower">
+          <div class="pane-header">
+            <span>annual_report_2024_strategy.md:17</span>
+            <span class="cls">public</span>
           </div>
-      </details>
+          Our <mark class="shingle">disciplined expansion into private credit</mark>, <mark class="shingle">first announced at the 2023 investor day</mark>, has continued to be <mark class="shingle">the central multi-year thesis guiding our capital allocation</mark> through 2024. We <mark class="shingle">see the opportunity as structural rather than cyclical, driven by the</mark> continued <mark class="shingle">retreat of regulated bank lenders from the middle market and by durable demand from sponsors for flexible, relationship-driven financing</mark>.
+        </div>
+      </div>
 
 
-    <p class="fix">Redact the overlapping section from `ma_memo_project_falcon_rationale.md` or rewrite so the shared framing no longer appears in both documents.</p>
+    <div class="fix">Redact the overlapping section from `ma_memo_project_falcon_rationale.md` or rewrite so the shared framing no longer appears in both documents.</div>
   </article>
   <article class="finding sev-high">
-    <header>
+    <div class="top">
       <span class="badge">high</span>
       <span class="rule-id">R001</span>
       <span class="rule-name">missing-classification</span>
       <span class="primary-file">quarterly_outlook_draft.md</span>
-    </header>
-    <p class="detail">Frontmatter has no `classification` field — access controls cannot be enforced on an undeclared document.</p>
+    </div>
+    <div class="detail">Frontmatter has no `classification` field — access controls cannot be enforced on an undeclared document.</div>
 
 
-    <p class="fix">Add `classification:` to frontmatter (public | internal | confidential | restricted).</p>
+    <div class="fix">Add `classification:` to frontmatter (public | internal | confidential | restricted).</div>
   </article>
   <article class="finding sev-medium">
-    <header>
+    <div class="top">
       <span class="badge">medium</span>
       <span class="rule-id">R002</span>
       <span class="rule-name">near-duplicate-across-classifications</span>
       <span class="primary-file">it_policy_acceptable_use.md</span>
-    </header>
-    <p class="detail">89% of paragraphs in `it_policy_acceptable_use.md` (internal) are near-identical to paragraphs in `it_policy_acceptable_use_unredacted.md` (restricted); 73% in the opposite direction.</p>
+    </div>
+    <div class="detail">89% of paragraphs in `it_policy_acceptable_use.md` (internal) are near-identical to paragraphs in `it_policy_acceptable_use_unredacted.md` (restricted); 73% in the opposite direction.</div>
 
-      <details>
+      <details class="r002-pairs">
         <summary>
-          8 near-identical paragraph pairs:
-          <code>it_policy_acceptable_use.md</code> (internal)
-          ↔ <code>it_policy_acceptable_use_unredacted.md</code> (restricted)
-          · 89% forward / 73% reverse
+          Show 8 near-identical paragraph pairs
+          (89% forward / 73% reverse)
         </summary>
           <div class="pair-cos">
-            pair #1 · cosine 1.00
-            · it_policy_acceptable_use.md:9
+            it_policy_acceptable_use.md:9
             ↔ it_policy_acceptable_use_unredacted.md:9
+            · cosine 1.00
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use.md:9</span>
+                <span>it_policy_acceptable_use.md:9</span>
                 <span class="cls">internal</span>
               </div>
               <mark class="shingle">This policy describes how employees of the firm are expected to use firm-provided technology and networks, and what activities are not permitted on them. It applies to all full-time employees, interns, and long-term contractors issued firm equipment or credentials</mark>.
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use_unredacted.md:9</span>
+                <span>it_policy_acceptable_use_unredacted.md:9</span>
                 <span class="cls">restricted</span>
               </div>
               <mark class="shingle">This policy describes how employees of the firm are expected to use firm-provided technology and networks, and what activities are not permitted on them. It applies to all full-time employees, interns, and long-term contractors issued firm equipment or credentials</mark>.
             </div>
           </div>
           <div class="pair-cos">
-            pair #2 · cosine 1.00
-            · it_policy_acceptable_use.md:13
+            it_policy_acceptable_use.md:13
             ↔ it_policy_acceptable_use_unredacted.md:13
+            · cosine 1.00
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use.md:13</span>
+                <span>it_policy_acceptable_use.md:13</span>
                 <span class="cls">internal</span>
               </div>
               <mark class="shingle">This policy applies to firm-issued laptops, phones, and tablets; to firm email, messaging, and document-collaboration accounts; and to any personal device used to access firm systems under the firm&#x27;s bring-your-own-device program. It applies on firm premises, in client offices, and when working remotely</mark>.
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use_unredacted.md:13</span>
+                <span>it_policy_acceptable_use_unredacted.md:13</span>
                 <span class="cls">restricted</span>
               </div>
               <mark class="shingle">This policy applies to firm-issued laptops, phones, and tablets; to firm email, messaging, and document-collaboration accounts; and to any personal device used to access firm systems under the firm&#x27;s bring-your-own-device program. It applies on firm premises, in client offices, and when working remotely</mark>.
             </div>
           </div>
           <div class="pair-cos">
-            pair #3 · cosine 1.00
-            · it_policy_acceptable_use.md:17
+            it_policy_acceptable_use.md:17
             ↔ it_policy_acceptable_use_unredacted.md:17
+            · cosine 1.00
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use.md:17</span>
+                <span>it_policy_acceptable_use.md:17</span>
                 <span class="cls">internal</span>
               </div>
               <mark class="shingle">Firm-issued equipment and credentials are provided for the purpose of carrying out firm business. Limited personal use is permitted where it does not interfere with work, does not consume material firm resources, and does not violate any other provision of this policy or of the code of conduct</mark>.
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use_unredacted.md:17</span>
+                <span>it_policy_acceptable_use_unredacted.md:17</span>
                 <span class="cls">restricted</span>
               </div>
               <mark class="shingle">Firm-issued equipment and credentials are provided for the purpose of carrying out firm business. Limited personal use is permitted where it does not interfere with work, does not consume material firm resources, and does not violate any other provision of this policy or of the code of conduct</mark>.
             </div>
           </div>
           <div class="pair-cos">
-            pair #4 · cosine 1.00
-            · it_policy_acceptable_use.md:19
+            it_policy_acceptable_use.md:19
             ↔ it_policy_acceptable_use_unredacted.md:19
+            · cosine 1.00
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use.md:19</span>
+                <span>it_policy_acceptable_use.md:19</span>
                 <span class="cls">internal</span>
               </div>
               <mark class="shingle">Employees should store firm work product only in firm-sanctioned systems. Use of unsanctioned cloud-storage or file-transfer services for firm work product is not permitted, including for convenience during travel</mark>.
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use_unredacted.md:19</span>
+                <span>it_policy_acceptable_use_unredacted.md:19</span>
                 <span class="cls">restricted</span>
               </div>
               <mark class="shingle">Employees should store firm work product only in firm-sanctioned systems. Use of unsanctioned cloud-storage or file-transfer services for firm work product is not permitted, including for convenience during travel</mark>.
             </div>
           </div>
           <div class="pair-cos">
-            pair #5 · cosine 1.00
-            · it_policy_acceptable_use.md:23
+            it_policy_acceptable_use.md:23
             ↔ it_policy_acceptable_use_unredacted.md:23
+            · cosine 1.00
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use.md:23</span>
+                <span>it_policy_acceptable_use.md:23</span>
                 <span class="cls">internal</span>
               </div>
               <mark class="shingle">The following activities are expressly prohibited on firm equipment and firm networks: installation of software not on the firm&#x27;s approved list; access to pornographic or gambling content; use of peer-to-peer file-sharing tools; circumvention of firm security controls, including personal VPN services not issued by the firm; and any use that violates applicable law</mark>.
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use_unredacted.md:23</span>
+                <span>it_policy_acceptable_use_unredacted.md:23</span>
                 <span class="cls">restricted</span>
               </div>
               <mark class="shingle">The following activities are expressly prohibited on firm equipment and firm networks: installation of software not on the firm&#x27;s approved list; access to pornographic or gambling content; use of peer-to-peer file-sharing tools; circumvention of firm security controls, including personal VPN services not issued by the firm; and any use that violates applicable law</mark>.
             </div>
           </div>
           <div class="pair-cos">
-            pair #6 · cosine 1.00
-            · it_policy_acceptable_use.md:27
+            it_policy_acceptable_use.md:27
             ↔ it_policy_acceptable_use_unredacted.md:27
+            · cosine 1.00
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use.md:27</span>
+                <span>it_policy_acceptable_use.md:27</span>
                 <span class="cls">internal</span>
               </div>
               <mark class="shingle">All firm accounts must use passwords generated by the firm&#x27;s password manager and must be protected by the firm&#x27;s multi-factor authentication. Sharing of credentials between employees is not permitted under any circumstance, including within the same team</mark>.
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">it_policy_acceptable_use_unredacted.md:27</span>
+                <span>it_policy_acceptable_use_unredacted.md:27</span>
                 <span class="cls">restricted</span>
               </div>
               <mark class="shingle">All firm accounts must use passwords generated by the firm&#x27;s password manager and must be protected by the firm&#x27;s multi-factor authentication. Sharing of credentials between employees is not permitted under any circumstance, including within the same team</mark>.
@@ -389,15 +400,16 @@
           </div>
       </details>
 
-    <p class="fix">Remove the lower-aligned copy, or align classifications. If `it_policy_acceptable_use.md` is the canonical public-facing version, the restricted draft should be archived or redacted.</p>
+    <div class="fix">Remove the lower-aligned copy, or align classifications. If `it_policy_acceptable_use.md` is the canonical public-facing version, the restricted draft should be archived or redacted.</div>
   </article>
-</main>
+</section>
 
 <footer class="page">
-  Generated by rag-lint · thresholds R002 ≥0.90 cosine &amp; ≥30% paragraph match · R003 ≥0.75 cosine
+  rag-lint · R002 ≥ 0.90 cosine and ≥ 30% paragraph match · R003 ≥ 0.75 cosine across classifications
   <br>
-  A linter catches the precondition for a paraphrase leak across classifications. It does not prove a leak has occurred.
+  A linter catches the precondition for a paraphrase leak. It does not prove a leak has occurred.
 </footer>
+
 </div>
 </body>
 </html>

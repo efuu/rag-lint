@@ -6,15 +6,15 @@
 <style>
   :root {
     --fg: #1a1a1a;
-    --muted: #555;
-    --border: #d9d9d9;
+    --muted: #6a6a6a;
+    --faint: #8a8a8a;
+    --border: #e2e2e2;
     --bg: #fafafa;
     --card: #ffffff;
     --high: #b3261e;
     --medium: #b68400;
     --low: #3a6d3a;
     --mark-bg: #fff3a3;
-    --mark-fg: #1a1a1a;
     --higher-bg: #fef6ee;
     --lower-bg: #eef3fb;
   }
@@ -26,54 +26,56 @@
     color: var(--fg);
     font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 80px; }
-  header.page { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
-  header.page h1 { margin: 0 0 6px 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
-  header.page .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 18px; }
-  header.page .meta span.sep { color: var(--border); }
-  .class-counts { margin-top: 10px; color: var(--muted); font-size: 13px; }
-  .class-counts .pill {
-    display: inline-block;
-    padding: 2px 8px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-right: 6px;
-    font-size: 12px;
-    background: var(--card);
+  .wrap { max-width: 980px; margin: 0 auto; padding: 28px 24px 64px; }
+
+  header.page { margin-bottom: 20px; }
+  header.page h1 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
-  .summary-line { margin-top: 12px; font-size: 14px; }
-  .summary-line strong { font-weight: 600; }
-  .sev-high   .badge { background: var(--high); color: white; }
-  .sev-medium .badge { background: var(--medium); color: white; }
-  .sev-low    .badge { background: var(--low); color: white; }
+  header.page .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .headline {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 13px;
+  }
+  .headline .count { font-weight: 600; font-size: 15px; }
+  .headline .count.clean { color: var(--low); }
+  .headline .count.dirty { color: var(--high); }
+  .headline .sep { color: var(--faint); }
+  .headline .tiny { color: var(--muted); font-size: 12px; }
+
+  .findings { margin-top: 18px; }
   .finding {
     background: var(--card);
     border: 1px solid var(--border);
     border-left: 4px solid var(--border);
     border-radius: 6px;
-    padding: 16px 18px;
-    margin: 14px 0;
+    padding: 14px 16px;
+    margin-bottom: 12px;
   }
   .finding.sev-high   { border-left-color: var(--high); }
   .finding.sev-medium { border-left-color: var(--medium); }
   .finding.sev-low    { border-left-color: var(--low); }
-  .finding header {
+
+  .finding .top {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 10px;
-    margin-bottom: 6px;
-  }
-  .rule-id {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 12px;
-    letter-spacing: 0.03em;
-    color: var(--muted);
-  }
-  .rule-name {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 13px;
-    color: var(--fg);
+    margin-bottom: 4px;
   }
   .badge {
     font-size: 10px;
@@ -82,37 +84,47 @@
     letter-spacing: 0.06em;
     padding: 2px 7px;
     border-radius: 3px;
+    color: white;
+  }
+  .sev-high   .badge { background: var(--high); }
+  .sev-medium .badge { background: var(--medium); }
+  .sev-low    .badge { background: var(--low); }
+  .rule-id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.02em;
+  }
+  .rule-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--muted);
   }
   .primary-file {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--fg);
     margin-left: auto;
   }
-  .detail { margin: 4px 0 8px; }
+  .detail {
+    margin: 4px 0 10px;
+    font-size: 13.5px;
+  }
   .fix {
-    margin: 8px 0 0;
-    padding: 8px 10px;
-    background: #f4f6f4;
-    border: 1px solid #e4e8e4;
+    margin: 10px 0 0;
+    padding: 7px 10px;
+    background: #f5f5f0;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 12.5px;
+    color: var(--fg);
   }
   .fix::before { content: "Fix — "; font-weight: 600; color: var(--muted); }
-  details { margin-top: 10px; }
-  details > summary {
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  details > summary:hover { color: var(--fg); }
 
   .sidebyside {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 8px;
   }
   .pane {
     border: 1px solid var(--border);
@@ -140,23 +152,41 @@
   }
   mark.shingle {
     background: var(--mark-bg);
-    color: var(--mark-fg);
     padding: 0 1px;
     border-radius: 2px;
   }
+
+  details.more-pairs { margin-top: 10px; }
+  details.more-pairs > summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 4px 0;
+  }
+  details.more-pairs > summary:hover { color: var(--fg); }
+  details.r002-pairs { margin-top: 6px; }
+  details.r002-pairs > summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 4px 0;
+  }
+  details.r002-pairs > summary:hover { color: var(--fg); }
+
   .pair-cos {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 11px;
-    color: var(--muted);
-    margin: 16px 0 4px;
+    color: var(--faint);
+    margin: 12px 0 4px;
   }
-  .pair-cos:first-child { margin-top: 0; }
+
   footer.page {
-    margin-top: 48px;
-    color: var(--muted);
-    font-size: 12px;
+    margin-top: 40px;
+    color: var(--faint);
+    font-size: 11.5px;
     border-top: 1px solid var(--border);
-    padding-top: 12px;
+    padding-top: 10px;
+    line-height: 1.5;
   }
   .empty-state {
     background: var(--card);
@@ -170,100 +200,133 @@
 </head>
 <body>
 <div class="wrap">
+
 <header class="page">
   <h1>rag-lint report</h1>
-  <div class="meta">
-    <div><strong>Corpus</strong>: {{ corpus_path }}</div>
-    <div><strong>Run</strong>: {{ timestamp }}</div>
-    <div><strong>Documents</strong>: {{ doc_count }}</div>
-    <div><strong>Paragraphs</strong>: {{ para_count }}</div>
-  </div>
-  <div class="class-counts">
-    {% for cls, n in class_counts.items() %}
-      <span class="pill">{{ cls }}: {{ n }}</span>
-    {% endfor %}
-  </div>
-  <div class="summary-line">
+  <div class="subtitle">{{ corpus_path }} · {{ doc_count }} documents, {{ para_count }} paragraphs · {{ timestamp }}</div>
+  <div class="headline">
     {% if totals.total == 0 %}
-      <strong>Clean.</strong> No findings.
+      <span class="count clean">Clean.</span>
+      <span class="tiny">No findings.</span>
     {% else %}
-      <strong>{{ totals.total }} finding{{ 's' if totals.total != 1 }}</strong>
-      &nbsp;·&nbsp; {{ totals.high }} high, {{ totals.medium }} medium, {{ totals.low }} low
+      <span class="count dirty">{{ totals.total }} finding{{ 's' if totals.total != 1 }}</span>
+      <span class="sep">·</span>
+      <span class="tiny">{{ totals.high }} high, {{ totals.medium }} medium, {{ totals.low }} low</span>
     {% endif %}
   </div>
 </header>
 
-<main>
+<section class="findings">
 {% if totals.total == 0 %}
   <div class="empty-state">No findings.</div>
 {% endif %}
 {% for f in findings %}
   <article class="finding sev-{{ f.severity }}">
-    <header>
+    <div class="top">
       <span class="badge">{{ f.severity }}</span>
       <span class="rule-id">{{ f.rule_id }}</span>
       <span class="rule-name">{{ f.rule_name }}</span>
       <span class="primary-file">{{ f.primary_file }}</span>
-    </header>
-    <p class="detail">{{ f.detail }}</p>
+    </div>
+    <div class="detail">{{ f.detail }}</div>
 
-    {% if f.kind == "R003" %}
-      <details open>
+    {% if f.kind == "R003" and f.primary_pair %}
+      <div class="pair-cos">
+        {{ f.higher_path }}:{{ f.primary_pair.higher_line }}
+        ↔ {{ f.lower_path }}:{{ f.primary_pair.lower_line }}
+        · cosine {{ "%.2f"|format(f.primary_pair.cosine) }}
+      </div>
+      <div class="sidebyside">
+        <div class="pane higher">
+          <div class="pane-header">
+            <span>{{ f.higher_path }}:{{ f.primary_pair.higher_line }}</span>
+            <span class="cls">{{ f.higher_classification }}</span>
+          </div>
+          {{ f.primary_pair.higher_html|safe }}
+        </div>
+        <div class="pane lower">
+          <div class="pane-header">
+            <span>{{ f.lower_path }}:{{ f.primary_pair.lower_line }}</span>
+            <span class="cls">{{ f.lower_classification }}</span>
+          </div>
+          {{ f.primary_pair.lower_html|safe }}
+        </div>
+      </div>
+      {% if f.extra_pairs %}
+        <details class="more-pairs">
+          <summary>+ {{ f.extra_pairs|length }} more overlapping paragraph pair{{ 's' if f.extra_pairs|length != 1 }}</summary>
+          {% for pair in f.extra_pairs %}
+            <div class="pair-cos">
+              {{ f.higher_path }}:{{ pair.higher_line }}
+              ↔ {{ f.lower_path }}:{{ pair.lower_line }}
+              · cosine {{ "%.2f"|format(pair.cosine) }}
+            </div>
+            <div class="sidebyside">
+              <div class="pane higher">
+                <div class="pane-header">
+                  <span>{{ f.higher_path }}:{{ pair.higher_line }}</span>
+                  <span class="cls">{{ f.higher_classification }}</span>
+                </div>
+                {{ pair.higher_html|safe }}
+              </div>
+              <div class="pane lower">
+                <div class="pane-header">
+                  <span>{{ f.lower_path }}:{{ pair.lower_line }}</span>
+                  <span class="cls">{{ f.lower_classification }}</span>
+                </div>
+                {{ pair.lower_html|safe }}
+              </div>
+            </div>
+          {% endfor %}
+        </details>
+      {% endif %}
+
+    {% elif f.kind == "R002" %}
+      <details class="r002-pairs">
         <summary>
-          Cross-class overlap: <code>{{ f.higher_path }}</code> ({{ f.higher_classification }})
-          vs <code>{{ f.lower_path }}</code> ({{ f.lower_classification }})
-          · max cosine {{ "%.2f"|format(f.max_cosine) }}
+          Show {{ f.pair_count }} near-identical paragraph pair{{ 's' if f.pair_count != 1 }}
+          ({{ "%.0f"|format(f.primary_ratio * 100) }}% forward / {{ "%.0f"|format(f.other_ratio * 100) }}% reverse)
         </summary>
-        {% for pair in f.pairs %}
+        {% if f.primary_pair %}
           <div class="pair-cos">
-            pair #{{ loop.index }} · cosine {{ "%.2f"|format(pair.cosine) }}
-            · {{ f.higher_path }}:{{ pair.higher_line }}
-            ↔ {{ f.lower_path }}:{{ pair.lower_line }}
+            {{ f.primary_path }}:{{ f.primary_pair.primary_line }}
+            ↔ {{ f.other_path }}:{{ f.primary_pair.other_line }}
+            · cosine {{ "%.2f"|format(f.primary_pair.cosine) }}
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">{{ f.higher_path }}:{{ pair.higher_line }}</span>
-                <span class="cls">{{ f.higher_classification }}</span>
+                <span>{{ f.primary_path }}:{{ f.primary_pair.primary_line }}</span>
+                <span class="cls">{{ f.primary_classification }}</span>
               </div>
-              {{ pair.higher_html|safe }}
+              {{ f.primary_pair.primary_html|safe }}
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">{{ f.lower_path }}:{{ pair.lower_line }}</span>
-                <span class="cls">{{ f.lower_classification }}</span>
+                <span>{{ f.other_path }}:{{ f.primary_pair.other_line }}</span>
+                <span class="cls">{{ f.other_classification }}</span>
               </div>
-              {{ pair.lower_html|safe }}
+              {{ f.primary_pair.other_html|safe }}
             </div>
           </div>
-        {% endfor %}
-      </details>
-
-    {% elif f.kind == "R002" %}
-      <details>
-        <summary>
-          {{ f.pair_count }} near-identical paragraph pair{{ 's' if f.pair_count != 1 }}:
-          <code>{{ f.primary_path }}</code> ({{ f.primary_classification }})
-          ↔ <code>{{ f.other_path }}</code> ({{ f.other_classification }})
-          · {{ "%.0f"|format(f.primary_ratio * 100) }}% forward / {{ "%.0f"|format(f.other_ratio * 100) }}% reverse
-        </summary>
-        {% for pair in f.pairs %}
+        {% endif %}
+        {% for pair in f.extra_pairs %}
           <div class="pair-cos">
-            pair #{{ loop.index }} · cosine {{ "%.2f"|format(pair.cosine) }}
-            · {{ f.primary_path }}:{{ pair.primary_line }}
+            {{ f.primary_path }}:{{ pair.primary_line }}
             ↔ {{ f.other_path }}:{{ pair.other_line }}
+            · cosine {{ "%.2f"|format(pair.cosine) }}
           </div>
           <div class="sidebyside">
             <div class="pane higher">
               <div class="pane-header">
-                <span class="path">{{ f.primary_path }}:{{ pair.primary_line }}</span>
+                <span>{{ f.primary_path }}:{{ pair.primary_line }}</span>
                 <span class="cls">{{ f.primary_classification }}</span>
               </div>
               {{ pair.primary_html|safe }}
             </div>
             <div class="pane lower">
               <div class="pane-header">
-                <span class="path">{{ f.other_path }}:{{ pair.other_line }}</span>
+                <span>{{ f.other_path }}:{{ pair.other_line }}</span>
                 <span class="cls">{{ f.other_classification }}</span>
               </div>
               {{ pair.other_html|safe }}
@@ -273,16 +336,17 @@
       </details>
     {% endif %}
 
-    <p class="fix">{{ f.fix }}</p>
+    <div class="fix">{{ f.fix }}</div>
   </article>
 {% endfor %}
-</main>
+</section>
 
 <footer class="page">
-  Generated by rag-lint · thresholds R002 ≥0.90 cosine &amp; ≥30% paragraph match · R003 ≥0.75 cosine
+  rag-lint · R002 ≥ 0.90 cosine and ≥ 30% paragraph match · R003 ≥ 0.75 cosine across classifications
   <br>
-  A linter catches the precondition for a paraphrase leak across classifications. It does not prove a leak has occurred.
+  A linter catches the precondition for a paraphrase leak. It does not prove a leak has occurred.
 </footer>
+
 </div>
 </body>
 </html>
