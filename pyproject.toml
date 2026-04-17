@@ -1,0 +1,24 @@
+[project]
+name = "rag-lint"
+version = "0.1.0"
+description = "A linter for RAG corpus access controls."
+readme = "README.md"
+authors = [
+    { name = "Dylan Wang", email = "icri12345mail@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "sentence-transformers>=3.0",
+    "numpy>=1.26",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    "typer>=0.12",
+    "jinja2>=3.1",
+]
+
+[project.scripts]
+rag-lint = "rag_lint.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.11.7,<0.12.0"]
+build-backend = "uv_build"

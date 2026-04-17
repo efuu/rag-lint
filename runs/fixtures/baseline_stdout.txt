@@ -1,0 +1,19 @@
+ma_memo_project_falcon_rationale.md: R003
+  cross-classification-semantic-overlap [severity: high]
+  Paragraph in `ma_memo_project_falcon_rationale.md` (restricted) has cosine 0.95 to a paragraph in `annual_report_2024_strategy.md` (public); overlap creates the precondition for a paraphrase leak across classifications.
+  related: annual_report_2024_strategy.md
+  Fix: Redact the overlapping section from `ma_memo_project_falcon_rationale.md` or rewrite so the shared framing no longer appears in both documents.
+
+quarterly_outlook_draft.md: R001
+  missing-classification [severity: high]
+  Frontmatter has no `classification` field — access controls cannot be enforced on an undeclared document.
+  Fix: Add `classification:` to frontmatter (public | internal | confidential | restricted).
+
+it_policy_acceptable_use.md: R002
+  near-duplicate-across-classifications [severity: medium]
+  89% of paragraphs in `it_policy_acceptable_use.md` (internal) are near-identical to paragraphs in `it_policy_acceptable_use_unredacted.md` (restricted); 73% in the opposite direction.
+  related: it_policy_acceptable_use_unredacted.md
+  Fix: Remove the lower-aligned copy, or align classifications. If `it_policy_acceptable_use.md` is the canonical public-facing version, the restricted draft should be archived or redacted.
+
+---
+Summary: 14 documents, 127 paragraphs scanned. 3 findings (2 high, 1 medium, 0 low).

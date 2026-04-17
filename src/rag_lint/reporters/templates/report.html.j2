@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>rag-lint report — {{ corpus_name }}</title>
+<style>
+  :root {
+    --fg: #1a1a1a;
+    --muted: #555;
+    --border: #d9d9d9;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --high: #b3261e;
+    --medium: #b68400;
+    --low: #3a6d3a;
+    --mark-bg: #fff3a3;
+    --mark-fg: #1a1a1a;
+    --higher-bg: #fef6ee;
+    --lower-bg: #eef3fb;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 80px; }
+  header.page { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+  header.page h1 { margin: 0 0 6px 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  header.page .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 18px; }
+  header.page .meta span.sep { color: var(--border); }
+  .class-counts { margin-top: 10px; color: var(--muted); font-size: 13px; }
+  .class-counts .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-right: 6px;
+    font-size: 12px;
+    background: var(--card);
+  }
+  .summary-line { margin-top: 12px; font-size: 14px; }
+  .summary-line strong { font-weight: 600; }
+  .sev-high   .badge { background: var(--high); color: white; }
+  .sev-medium .badge { background: var(--medium); color: white; }
+  .sev-low    .badge { background: var(--low); color: white; }
+  .finding {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin: 14px 0;
+  }
+  .finding.sev-high   { border-left-color: var(--high); }
+  .finding.sev-medium { border-left-color: var(--medium); }
+  .finding.sev-low    { border-left-color: var(--low); }
+  .finding header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .rule-id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+  .rule-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--fg);
+  }
+  .badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+  .primary-file {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--fg);
+    margin-left: auto;
+  }
+  .detail { margin: 4px 0 8px; }
+  .fix {
+    margin: 8px 0 0;
+    padding: 8px 10px;
+    background: #f4f6f4;
+    border: 1px solid #e4e8e4;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .fix::before { content: "Fix — "; font-weight: 600; color: var(--muted); }
+  details { margin-top: 10px; }
+  details > summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  details > summary:hover { color: var(--fg); }
+
+  .sidebyside {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .pane {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 10px 12px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .pane.higher { background: var(--higher-bg); }
+  .pane.lower  { background: var(--lower-bg); }
+  .pane .pane-header {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    white-space: normal;
+  }
+  .pane .pane-header .cls {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  mark.shingle {
+    background: var(--mark-bg);
+    color: var(--mark-fg);
+    padding: 0 1px;
+    border-radius: 2px;
+  }
+  .pair-cos {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 16px 0 4px;
+  }
+  .pair-cos:first-child { margin-top: 0; }
+  footer.page {
+    margin-top: 48px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .empty-state {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 40px;
+    text-align: center;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="page">
+  <h1>rag-lint report</h1>
+  <div class="meta">
+    <div><strong>Corpus</strong>: {{ corpus_path }}</div>
+    <div><strong>Run</strong>: {{ timestamp }}</div>
+    <div><strong>Documents</strong>: {{ doc_count }}</div>
+    <div><strong>Paragraphs</strong>: {{ para_count }}</div>
+  </div>
+  <div class="class-counts">
+    {% for cls, n in class_counts.items() %}
+      <span class="pill">{{ cls }}: {{ n }}</span>
+    {% endfor %}
+  </div>
+  <div class="summary-line">
+    {% if totals.total == 0 %}
+      <strong>Clean.</strong> No findings.
+    {% else %}
+      <strong>{{ totals.total }} finding{{ 's' if totals.total != 1 }}</strong>
+      &nbsp;·&nbsp; {{ totals.high }} high, {{ totals.medium }} medium, {{ totals.low }} low
+    {% endif %}
+  </div>
+</header>
+
+<main>
+{% if totals.total == 0 %}
+  <div class="empty-state">No findings.</div>
+{% endif %}
+{% for f in findings %}
+  <article class="finding sev-{{ f.severity }}">
+    <header>
+      <span class="badge">{{ f.severity }}</span>
+      <span class="rule-id">{{ f.rule_id }}</span>
+      <span class="rule-name">{{ f.rule_name }}</span>
+      <span class="primary-file">{{ f.primary_file }}</span>
+    </header>
+    <p class="detail">{{ f.detail }}</p>
+
+    {% if f.kind == "R003" %}
+      <details open>
+        <summary>
+          Cross-class overlap: <code>{{ f.higher_path }}</code> ({{ f.higher_classification }})
+          vs <code>{{ f.lower_path }}</code> ({{ f.lower_classification }})
+          · max cosine {{ "%.2f"|format(f.max_cosine) }}
+        </summary>
+        {% for pair in f.pairs %}
+          <div class="pair-cos">
+            pair #{{ loop.index }} · cosine {{ "%.2f"|format(pair.cosine) }}
+            · {{ f.higher_path }}:{{ pair.higher_line }}
+            ↔ {{ f.lower_path }}:{{ pair.lower_line }}
+          </div>
+          <div class="sidebyside">
+            <div class="pane higher">
+              <div class="pane-header">
+                <span class="path">{{ f.higher_path }}:{{ pair.higher_line }}</span>
+                <span class="cls">{{ f.higher_classification }}</span>
+              </div>
+              {{ pair.higher_html|safe }}
+            </div>
+            <div class="pane lower">
+              <div class="pane-header">
+                <span class="path">{{ f.lower_path }}:{{ pair.lower_line }}</span>
+                <span class="cls">{{ f.lower_classification }}</span>
+              </div>
+              {{ pair.lower_html|safe }}
+            </div>
+          </div>
+        {% endfor %}
+      </details>
+
+    {% elif f.kind == "R002" %}
+      <details>
+        <summary>
+          {{ f.pair_count }} near-identical paragraph pair{{ 's' if f.pair_count != 1 }}:
+          <code>{{ f.primary_path }}</code> ({{ f.primary_classification }})
+          ↔ <code>{{ f.other_path }}</code> ({{ f.other_classification }})
+          · {{ "%.0f"|format(f.primary_ratio * 100) }}% forward / {{ "%.0f"|format(f.other_ratio * 100) }}% reverse
+        </summary>
+        {% for pair in f.pairs %}
+          <div class="pair-cos">
+            pair #{{ loop.index }} · cosine {{ "%.2f"|format(pair.cosine) }}
+            · {{ f.primary_path }}:{{ pair.primary_line }}
+            ↔ {{ f.other_path }}:{{ pair.other_line }}
+          </div>
+          <div class="sidebyside">
+            <div class="pane higher">
+              <div class="pane-header">
+                <span class="path">{{ f.primary_path }}:{{ pair.primary_line }}</span>
+                <span class="cls">{{ f.primary_classification }}</span>
+              </div>
+              {{ pair.primary_html|safe }}
+            </div>
+            <div class="pane lower">
+              <div class="pane-header">
+                <span class="path">{{ f.other_path }}:{{ pair.other_line }}</span>
+                <span class="cls">{{ f.other_classification }}</span>
+              </div>
+              {{ pair.other_html|safe }}
+            </div>
+          </div>
+        {% endfor %}
+      </details>
+    {% endif %}
+
+    <p class="fix">{{ f.fix }}</p>
+  </article>
+{% endfor %}
+</main>
+
+<footer class="page">
+  Generated by rag-lint · thresholds R002 ≥0.90 cosine &amp; ≥30% paragraph match · R003 ≥0.75 cosine
+  <br>
+  A linter catches the precondition for a paraphrase leak across classifications. It does not prove a leak has occurred.
+</footer>
+</div>
+</body>
+</html>
