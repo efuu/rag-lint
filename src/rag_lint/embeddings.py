@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
+import logging
 import os
+import warnings
 
 import numpy as np
 
@@ -12,13 +16,47 @@ _MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 _model = None
 
 
+def _silence_libraries() -> None:
+    os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+    os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+    os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
+    os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+    for name in (
+        "transformers",
+        "sentence_transformers",
+        "huggingface_hub",
+        "urllib3",
+    ):
+        logging.getLogger(name).setLevel(logging.ERROR)
+    warnings.filterwarnings("ignore", category=UserWarning)
+    warnings.filterwarnings("ignore", category=FutureWarning)
+
+
+@contextlib.contextmanager
+def _silence_fds():
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    saved_stdout = os.dup(1)
+    saved_stderr = os.dup(2)
+    try:
+        os.dup2(devnull, 1)
+        os.dup2(devnull, 2)
+        yield
+    finally:
+        os.dup2(saved_stdout, 1)
+        os.dup2(saved_stderr, 2)
+        os.close(saved_stdout)
+        os.close(saved_stderr)
+        os.close(devnull)
+
+
 def _get_model():
     global _model
     if _model is None:
-        os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
-        from sentence_transformers import SentenceTransformer
+        _silence_libraries()
+        with _silence_fds():
+            from sentence_transformers import SentenceTransformer
 
-        _model = SentenceTransformer(_MODEL_NAME)
+            _model = SentenceTransformer(_MODEL_NAME)
     return _model
 
 
