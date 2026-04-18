@@ -61,13 +61,3 @@ uv run rag-lint data/corpus/acme_financial
 ```
 
 Expect three findings (one per rule). Baselines committed in `runs/fixtures/`.
-
-## Probe harness
-
-`examples/probe_leak.py` takes the threat model out of prose and into numbers. Embeds the corpus, runs queries under three scenarios — correct ACL, failed ACL, failed ACL after applying R003's redaction prescription — and reports the change in retrieval rank and cosine.
-
-```
-uv run python examples/probe_leak.py
-```
-
-On the shipped corpus: top restricted cosine drops from **0.72 → 0.66** after R003 redaction on the overlap-targeting query, with the specific doorway paragraph falling out of top-5. That's the blast-radius reduction, quantified.
