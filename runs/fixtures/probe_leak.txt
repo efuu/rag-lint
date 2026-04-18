@@ -1,0 +1,142 @@
+==============================================================================
+  rag-lint probe — does cross-class overlap actually change the
+  leak surface when the ACL fails? Empirical check on the corpus.
+==============================================================================
+
+Corpus: 14 documents
+rag-lint findings: 1 R001, 1 R002, 1 R003
+R003 redactions (simulated): 1 paragraph(s)
+  - ma_memo_project_falcon_rationale.md  paragraph #3
+
+Index: 127 paragraph embeddings (126 after R003 redaction)
+
+Query: 'What is our strategy for private credit?'
+------------------------------------------------------------------------------
+  A. Top-5 retrieved under correct ACL (public user):
+  annual_report_2024_strategy.md: 17   cosine 0.66
+  annual_report_2024_strategy.md: 21   cosine 0.59
+  annual_report_2024_strategy.md: 25   cosine 0.45
+  sector_research_private_credit.md: 13   cosine 0.44
+  annual_report_2024_strategy.md: 11   cosine 0.41
+
+  B. Top-5 retrieved if ACL failed (no filtering):
+  annual_report_2024_strategy.md: 17   cosine 0.66
+  ma_memo_project_falcon_rationale.md: 19   cosine 0.63  ← RESTRICTED, would be blocked by ACL
+  annual_report_2024_strategy.md: 21   cosine 0.59
+  ma_memo_project_falcon_rationale.md: 23   cosine 0.57  ← RESTRICTED, would be blocked by ACL
+  earnings_prep_q1_2026.md: 36   cosine 0.56  ← RESTRICTED, would be blocked by ACL
+
+  C. Top-5 after applying rag-lint R003 redactions, still no ACL:
+  annual_report_2024_strategy.md: 17   cosine 0.66
+  annual_report_2024_strategy.md: 21   cosine 0.59
+  ma_memo_project_falcon_rationale.md: 23   cosine 0.57  ← RESTRICTED, would be blocked by ACL
+  earnings_prep_q1_2026.md: 36   cosine 0.56  ← RESTRICTED, would be blocked by ACL
+  ma_memo_project_falcon_rationale.md: 27   cosine 0.46  ← RESTRICTED, would be blocked by ACL
+
+  Blast-radius delta: top non-public hit rank #2 cos 0.63 (ma_memo_project_falcon_rationale.md)  →  rank #3 cos 0.57 (ma_memo_project_falcon_rationale.md)
+
+Query: 'How will we accelerate the disciplined expansion into private credit?'
+------------------------------------------------------------------------------
+  A. Top-5 retrieved under correct ACL (public user):
+  annual_report_2024_strategy.md: 17   cosine 0.74
+  annual_report_2024_strategy.md: 21   cosine 0.66
+  sector_research_private_credit.md: 25   cosine 0.48
+  sector_research_private_credit.md: 13   cosine 0.47
+  annual_report_2024_strategy.md: 19   cosine 0.46
+
+  B. Top-5 retrieved if ACL failed (no filtering):
+  annual_report_2024_strategy.md: 17   cosine 0.74
+  ma_memo_project_falcon_rationale.md: 19   cosine 0.72  ← RESTRICTED, would be blocked by ACL
+  ma_memo_project_falcon_rationale.md: 23   cosine 0.66  ← RESTRICTED, would be blocked by ACL
+  annual_report_2024_strategy.md: 21   cosine 0.66
+  ma_memo_project_falcon_rationale.md: 27   cosine 0.55  ← RESTRICTED, would be blocked by ACL
+
+  C. Top-5 after applying rag-lint R003 redactions, still no ACL:
+  annual_report_2024_strategy.md: 17   cosine 0.74
+  ma_memo_project_falcon_rationale.md: 23   cosine 0.66  ← RESTRICTED, would be blocked by ACL
+  annual_report_2024_strategy.md: 21   cosine 0.66
+  ma_memo_project_falcon_rationale.md: 27   cosine 0.55  ← RESTRICTED, would be blocked by ACL
+  earnings_prep_q1_2026.md: 36   cosine 0.53  ← RESTRICTED, would be blocked by ACL
+
+  Blast-radius delta: top non-public hit rank #2 cos 0.72 (ma_memo_project_falcon_rationale.md)  →  rank #2 cos 0.66 (ma_memo_project_falcon_rationale.md)
+
+Query: 'Are there acquisitions being considered to scale the private credit platform?'
+------------------------------------------------------------------------------
+  A. Top-5 retrieved under correct ACL (public user):
+  annual_report_2024_strategy.md: 21   cosine 0.58
+  annual_report_2024_strategy.md: 17   cosine 0.56
+  annual_report_2024_strategy.md: 19   cosine 0.46
+  sector_research_private_credit.md: 13   cosine 0.43
+  annual_report_2024_strategy.md: 25   cosine 0.43
+
+  B. Top-5 retrieved if ACL failed (no filtering):
+  ma_memo_project_falcon_rationale.md: 21   cosine 0.60  ← RESTRICTED, would be blocked by ACL
+  ma_memo_project_falcon_rationale.md: 23   cosine 0.59  ← RESTRICTED, would be blocked by ACL
+  annual_report_2024_strategy.md: 21   cosine 0.58
+  ma_memo_project_falcon_rationale.md: 19   cosine 0.57  ← RESTRICTED, would be blocked by ACL
+  annual_report_2024_strategy.md: 17   cosine 0.56
+
+  C. Top-5 after applying rag-lint R003 redactions, still no ACL:
+  ma_memo_project_falcon_rationale.md: 21   cosine 0.60  ← RESTRICTED, would be blocked by ACL
+  ma_memo_project_falcon_rationale.md: 23   cosine 0.59  ← RESTRICTED, would be blocked by ACL
+  annual_report_2024_strategy.md: 21   cosine 0.58
+  annual_report_2024_strategy.md: 17   cosine 0.56
+  earnings_prep_q1_2026.md: 36   cosine 0.54  ← RESTRICTED, would be blocked by ACL
+
+  Blast-radius delta: top non-public hit rank #1 cos 0.60 (ma_memo_project_falcon_rationale.md)  →  rank #1 cos 0.60 (ma_memo_project_falcon_rationale.md)
+
+Query: 'What is the valuation on any pending strategic transaction?'
+------------------------------------------------------------------------------
+  A. Top-5 retrieved under correct ACL (public user):
+  press_release_q3_2025_earnings.md: 13   cosine 0.45
+  annual_report_2024_strategy.md: 31   cosine 0.39
+  annual_report_2024_strategy.md: 11   cosine 0.37
+  sector_research_private_credit.md:  9   cosine 0.37
+  annual_report_2024_strategy.md: 39   cosine 0.36
+
+  B. Top-5 retrieved if ACL failed (no filtering):
+  earnings_prep_q1_2026.md: 30   cosine 0.49  ← RESTRICTED, would be blocked by ACL
+  ma_memo_project_falcon_rationale.md: 31   cosine 0.48  ← RESTRICTED, would be blocked by ACL
+  press_release_q3_2025_earnings.md: 13   cosine 0.45
+  vendor_contract_summary.md: 13   cosine 0.45  ← CONFIDENTIAL, would be blocked by ACL
+  research_note_techco_internal.md: 31   cosine 0.44  ← CONFIDENTIAL, would be blocked by ACL
+
+  C. Top-5 after applying rag-lint R003 redactions, still no ACL:
+  earnings_prep_q1_2026.md: 30   cosine 0.49  ← RESTRICTED, would be blocked by ACL
+  ma_memo_project_falcon_rationale.md: 31   cosine 0.48  ← RESTRICTED, would be blocked by ACL
+  press_release_q3_2025_earnings.md: 13   cosine 0.45
+  vendor_contract_summary.md: 13   cosine 0.45  ← CONFIDENTIAL, would be blocked by ACL
+  research_note_techco_internal.md: 31   cosine 0.44  ← CONFIDENTIAL, would be blocked by ACL
+
+  Blast-radius delta: top non-public hit rank #1 cos 0.49 (earnings_prep_q1_2026.md)  →  rank #1 cos 0.49 (earnings_prep_q1_2026.md)
+
+Query: 'How does our code of conduct handle conflicts of interest?'
+------------------------------------------------------------------------------
+  A. Top-5 retrieved under correct ACL (public user):
+  sector_research_private_credit.md:  9   cosine 0.30
+  annual_report_2024_strategy.md: 39   cosine 0.23
+  press_release_q3_2025_earnings.md: 33   cosine 0.22
+  annual_report_2024_strategy.md: 17   cosine 0.21
+  annual_report_2024_strategy.md: 13   cosine 0.20
+
+  B. Top-5 retrieved if ACL failed (no filtering):
+  handbook_code_of_conduct.md: 17   cosine 0.54  ← INTERNAL, would be blocked by ACL
+  handbook_code_of_conduct.md: 33   cosine 0.45  ← INTERNAL, would be blocked by ACL
+  internal_faq_working_with_counsel.md: 17   cosine 0.44  ← INTERNAL, would be blocked by ACL
+  it_policy_acceptable_use_unredacted.md: 47   cosine 0.41  ← RESTRICTED, would be blocked by ACL
+  handbook_code_of_conduct.md: 29   cosine 0.40  ← INTERNAL, would be blocked by ACL
+
+  C. Top-5 after applying rag-lint R003 redactions, still no ACL:
+  handbook_code_of_conduct.md: 17   cosine 0.54  ← INTERNAL, would be blocked by ACL
+  handbook_code_of_conduct.md: 33   cosine 0.45  ← INTERNAL, would be blocked by ACL
+  internal_faq_working_with_counsel.md: 17   cosine 0.44  ← INTERNAL, would be blocked by ACL
+  it_policy_acceptable_use_unredacted.md: 47   cosine 0.41  ← RESTRICTED, would be blocked by ACL
+  handbook_code_of_conduct.md: 29   cosine 0.40  ← INTERNAL, would be blocked by ACL
+
+  Blast-radius delta: top non-public hit rank #1 cos 0.54 (handbook_code_of_conduct.md)  →  rank #1 cos 0.54 (handbook_code_of_conduct.md)
+
+==============================================================================
+  Reading: when (C) beats (B) — restricted content drops in rank or disappears
+  from top-5 — that's the blast-radius reduction R003 is actually buying you
+  in the presence of an ACL failure.
+==============================================================================

@@ -119,6 +119,21 @@ rag-lint exits `1` on findings and prints a stable stdout format. A minimal gate
 
 The HTML report (`--format html`) is a single static file suitable for publishing as a build artifact.
 
+## Probe harness
+
+The repo ships a small probe that exercises the threat model empirically.
+`examples/probe_leak.py` embeds the whole corpus, runs queries a public-cleared
+user might plausibly ask, and shows retrieval (a) under a correct ACL, (b) if
+the ACL fails, and (c) if the ACL fails but rag-lint's R003 prescription has
+been applied. Contrast b vs c — that's the blast-radius reduction R003 is
+actually buying you when the rest of the stack misbehaves.
+
+```
+uv run python examples/probe_leak.py
+```
+
+Baseline output is committed at `runs/fixtures/probe_leak.txt`.
+
 ## Notes
 
 - No runtime LLM calls. Embedding is local via `sentence-transformers/all-MiniLM-L6-v2`.
