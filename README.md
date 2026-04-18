@@ -71,20 +71,3 @@ uv run python examples/probe_leak.py
 ```
 
 On the shipped corpus: top restricted cosine drops from **0.72 → 0.66** after R003 redaction on the overlap-targeting query, with the specific doorway paragraph falling out of top-5. That's the blast-radius reduction, quantified.
-
-## What rag-lint is not
-
-- Not PII detection (use Presidio)
-- Not runtime retrieval filtering (pipeline-side concern)
-- Not classification inference (labels are trusted; missing labels are flagged)
-- Not a platform — three rules, locked thresholds, no config file, no test directory, no JSON output, Markdown only
-
-Cut list is longer than the feature list on purpose. Narrowness is the genre.
-
-## Limits
-
-Naive O(N²) document pairs. Fine to ~1k documents. Past that, swap in an ANN index.
-
-Thresholds (0.30, 0.75, 0.90) are module constants tuned against the shipped corpus and locked. A linter with per-run threshold tuning has the wrong shape.
-
-Catches lazy paraphrase reuse, not adversarial paraphrase. Trusts frontmatter labels at face value.
